@@ -25,6 +25,21 @@ export function requireEnv(name) {
   return value;
 }
 
+// chat.postMessage and friends need a channel ID, not a name — resolve if needed.
+export async function resolveChannelId(slack, channel) {
+  if (/^[CG][A-Z0-9]{8,}$/.test(channel)) return channel;
+
+  let cursor;
+  do {
+    const res = await slack.conversations.list({ cursor, limit: 200, types: 'public_channel,private_channel' });
+    const match = res.channels.find((c) => c.name === channel);
+    if (match) return match.id;
+    cursor = res.response_metadata?.next_cursor;
+  } while (cursor);
+
+  throw new Error(`Channel "${channel}" not found.`);
+}
+
 export function getISOWeekNumber(date = new Date()) {
   const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
   const dayNum = d.getUTCDay() || 7;

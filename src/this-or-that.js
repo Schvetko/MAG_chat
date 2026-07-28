@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { WebClient } from '@slack/web-api';
-import { loadState, saveState, requireEnv, pickUnused, isGroupWeek } from './utils.js';
+import { loadState, saveState, requireEnv, pickUnused, isGroupWeek, resolveChannelId } from './utils.js';
 
 const STATE_FILE = 'poll-state.json';
 
@@ -53,6 +53,7 @@ async function main() {
   const token = requireEnv('SLACK_BOT_TOKEN');
   const channel = requireEnv('THIS_OR_THAT_CHANNEL');
   const slack = new WebClient(token);
+  const channelId = await resolveChannelId(slack, channel);
 
   const state = loadState(STATE_FILE, { usedPairs: [] });
   const { picked: pair, usedKeys } = pickUnused(PAIRS, state.usedPairs, (p) => p.join(' vs '));
@@ -60,12 +61,12 @@ async function main() {
 
   console.log(`Posting this-or-that poll: "${optionA}" vs "${optionB}"`);
   const result = await slack.chat.postMessage({
-    channel,
+    channel: channelId,
     text: `🆚 *This or That?*\n\n🅰️  ${optionA}\n🅱️  ${optionB}\n\nReact below to vote!`,
   });
 
-  await slack.reactions.add({ channel, timestamp: result.ts, name: 'a' });
-  await slack.reactions.add({ channel, timestamp: result.ts, name: 'b' });
+  await slack.reactions.add({ channel: channelId, timestamp: result.ts, name: 'a' });
+  await slack.reactions.add({ channel: channelId, timestamp: result.ts, name: 'b' });
 
   saveState(STATE_FILE, { usedPairs: usedKeys });
   console.log('Done.');

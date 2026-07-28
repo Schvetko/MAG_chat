@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { WebClient } from '@slack/web-api';
-import { loadState, saveState, requireEnv, pickUnused, isGroupWeek } from './utils.js';
+import { loadState, saveState, requireEnv, pickUnused, isGroupWeek, resolveChannelId } from './utils.js';
 
 const STATE_FILE = 'theme-state.json';
 
@@ -43,13 +43,14 @@ async function main() {
   const token = requireEnv('SLACK_BOT_TOKEN');
   const channel = requireEnv('WEEKLY_THEME_CHANNEL');
   const slack = new WebClient(token);
+  const channelId = await resolveChannelId(slack, channel);
 
   const state = loadState(STATE_FILE, { usedThemes: [] });
   const { picked: theme, usedKeys } = pickUnused(THEMES, state.usedThemes, (t) => t.title);
 
   console.log(`Posting weekly theme: "${theme.title}"`);
   await slack.chat.postMessage({
-    channel,
+    channel: channelId,
     text: `${theme.emoji} *This week's theme: ${theme.title}*\n\n${theme.prompt}`,
   });
 

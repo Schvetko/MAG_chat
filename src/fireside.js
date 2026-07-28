@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { WebClient } from '@slack/web-api';
-import { loadState, saveState, requireEnv, pickUnused, isGroupWeek } from './utils.js';
+import { loadState, saveState, requireEnv, pickUnused, isGroupWeek, resolveChannelId } from './utils.js';
 
 const STATE_FILE = 'fireside-state.json';
 
@@ -53,13 +53,14 @@ async function main() {
   const token = requireEnv('SLACK_BOT_TOKEN');
   const channel = requireEnv('FIRESIDE_CHANNEL');
   const slack = new WebClient(token);
+  const channelId = await resolveChannelId(slack, channel);
 
   const state = loadState(STATE_FILE, { usedQuestions: [] });
   const { picked: question, usedKeys } = pickUnused(QUESTIONS, state.usedQuestions);
 
   console.log(`Posting fireside question: "${question}"`);
   await slack.chat.postMessage({
-    channel,
+    channel: channelId,
     text: `🔥 *Fireside Question of the Week*\n\n${question}`,
   });
 
