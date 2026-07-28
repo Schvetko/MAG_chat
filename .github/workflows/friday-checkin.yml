@@ -1,0 +1,29 @@
+name: Friday Check-in (Fri 15:00 UTC)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 15 * * 5'
+
+jobs:
+  friday-checkin:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Friday Check-in
+        run: npm run friday-checkin
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          FRIDAY_CHECKIN_CHANNEL: ${{ vars.FRIDAY_CHECKIN_CHANNEL }}

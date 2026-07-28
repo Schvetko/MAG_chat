@@ -1,0 +1,18 @@
+{
+  "name": "mag-chat",
+  "version": "1.0.0",
+  "description": "MAG chat — Slack bot with weekly/monthly team engagement mechanics: fireside questions, this-or-that polls, weekly themes, spotlight, Friday check-ins, and monthly work updates",
+  "type": "module",
+  "scripts": {
+    "fireside": "node src/fireside.js",
+    "this-or-that": "node src/this-or-that.js",
+    "weekly-theme": "node src/weekly-theme.js",
+    "spotlight": "node src/spotlight.js",
+    "friday-checkin": "node src/friday-checkin.js",
+    "what-im-working-on": "node src/what-im-working-on.js"
+  },
+  "dependencies": {
+    "@slack/web-api": "^7.0.0",
+    "dotenv": "^16.0.0"
+  }
+}

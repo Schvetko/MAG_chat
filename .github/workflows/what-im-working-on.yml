@@ -1,0 +1,29 @@
+name: What I'm Working On (1st of month, 09:00 UTC)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 9 1 * *'
+
+jobs:
+  what-im-working-on:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run What I'm Working On
+        run: npm run what-im-working-on
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          WORKING_ON_CHANNEL: ${{ vars.WORKING_ON_CHANNEL }}
