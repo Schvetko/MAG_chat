@@ -1,9 +1,9 @@
-name: Friday Check-in (Fri 15:00 UTC)
+name: Friday Check-in (Fri 10:00 UTC)
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 15 * * 5'
+    - cron: '0 10 * * 5'
 
 jobs:
   friday-checkin:
