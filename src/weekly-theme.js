@@ -51,7 +51,7 @@ async function main() {
   console.log(`Posting weekly theme: "${theme.title}"`);
   await slack.chat.postMessage({
     channel: channelId,
-    text: `${theme.emoji} *This week's theme: ${theme.title}*\n\n${theme.prompt}\n\nPost a photo in the thread below — or a couple of lines if a photo doesn't fit the theme!`,
+    text: `${theme.emoji} *This week's theme: ${theme.title}*\nPost a photo in the thread below. ${theme.prompt}`,
   });
 
   saveState(STATE_FILE, { usedThemes: usedKeys });
