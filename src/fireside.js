@@ -38,9 +38,7 @@ const QUESTIONS = [
   "What's a tradition from your childhood you still keep?",
   'If your life had a theme song, what would it be?',
   "What's a place you've never been but really want to visit?",
-  'If you could ask a magic 8-ball one real question right now, what would it be?',
   "What's your favorite way to spend a rainy day?",
-  'If you could permanently swap one everyday object for a magical version, what would it be?',
 ];
 
 async function main() {
