@@ -42,7 +42,7 @@ const QUESTIONS = [
 ];
 
 async function main() {
-  // Biweekly: alternates with weekly-theme so only two of the four mechanics post per week.
+  // Biweekly: runs on the opposite weeks from weekly-theme/this-or-that/spotlight.
   if (!isGroupWeek('A')) {
     console.log('Not this group\'s week — skipping fireside.');
     return;

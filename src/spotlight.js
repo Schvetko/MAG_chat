@@ -63,7 +63,7 @@ async function getActiveUserIds(slack) {
 }
 
 async function main() {
-  // Biweekly: alternates with this-or-that so only two of the four mechanics post per week.
+  // Biweekly: runs the same weeks as weekly-theme (and this-or-that).
   if (!isGroupWeek('B')) {
     console.log('Not this group\'s week — skipping spotlight.');
     return;

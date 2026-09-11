@@ -44,8 +44,8 @@ const PAIRS = [
 ];
 
 async function main() {
-  // Biweekly: alternates with spotlight so only two of the four mechanics post per week.
-  if (!isGroupWeek('A')) {
+  // Biweekly: runs the same weeks as weekly-theme (and spotlight).
+  if (!isGroupWeek('B')) {
     console.log('Not this group\'s week — skipping this-or-that.');
     return;
   }
