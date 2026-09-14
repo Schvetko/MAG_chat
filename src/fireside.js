@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { WebClient } from '@slack/web-api';
-import { loadState, saveState, requireEnv, pickUnused, isGroupWeek, resolveChannelId } from './utils.js';
+import { loadState, saveState, requireEnv, pickUnused, resolveChannelId } from './utils.js';
 
 const STATE_FILE = 'fireside-state.json';
 
@@ -42,12 +42,6 @@ const QUESTIONS = [
 ];
 
 async function main() {
-  // Biweekly: runs on the opposite weeks from weekly-theme/this-or-that/spotlight.
-  if (!isGroupWeek('A')) {
-    console.log('Not this group\'s week — skipping fireside.');
-    return;
-  }
-
   const token = requireEnv('SLACK_BOT_TOKEN');
   const channel = requireEnv('FIRESIDE_CHANNEL');
   const slack = new WebClient(token);

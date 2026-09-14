@@ -1,4 +1,4 @@
-name: Weekly Theme (biweekly, Mon 09:00 UTC)
+name: Weekly Theme (weekly, Mon 09:00 UTC)
 
 on:
   workflow_dispatch:

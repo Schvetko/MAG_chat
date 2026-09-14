@@ -1,4 +1,4 @@
-name: Fireside (biweekly, Wed 09:00 UTC)
+name: Fireside (weekly, Wed 09:00 UTC)
 
 on:
   workflow_dispatch:

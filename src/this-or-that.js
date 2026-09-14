@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { WebClient } from '@slack/web-api';
-import { loadState, saveState, requireEnv, pickUnused, isGroupWeek, resolveChannelId } from './utils.js';
+import { loadState, saveState, requireEnv, pickUnused, resolveChannelId } from './utils.js';
 
 const STATE_FILE = 'poll-state.json';
 
@@ -44,12 +44,6 @@ const PAIRS = [
 ];
 
 async function main() {
-  // Biweekly: runs the same weeks as weekly-theme (and spotlight).
-  if (!isGroupWeek('B')) {
-    console.log('Not this group\'s week — skipping this-or-that.');
-    return;
-  }
-
   const token = requireEnv('SLACK_BOT_TOKEN');
   const channel = requireEnv('THIS_OR_THAT_CHANNEL');
   const slack = new WebClient(token);

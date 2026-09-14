@@ -1,4 +1,4 @@
-name: This or That (biweekly, Fri 09:00 UTC)
+name: This or That (weekly, Fri 09:00 UTC)
 
 on:
   workflow_dispatch:
