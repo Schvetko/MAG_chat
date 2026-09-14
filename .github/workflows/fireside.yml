@@ -1,9 +1,9 @@
-name: Fireside (weekly, Wed 09:00 UTC)
+name: Fireside (weekly, Wed 09:07 UTC)
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 9 * * 3'
+    - cron: '7 9 * * 3'
 
 permissions:
   contents: write

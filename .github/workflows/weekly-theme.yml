@@ -1,9 +1,9 @@
-name: Weekly Theme (weekly, Mon 09:00 UTC)
+name: Weekly Theme (weekly, Mon 09:07 UTC)
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 9 * * 1'
+    - cron: '7 9 * * 1'
 
 permissions:
   contents: write

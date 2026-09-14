@@ -1,9 +1,9 @@
-name: What I'm Working On (1st of month, 09:00 UTC)
+name: What I'm Working On (1st of month, 09:07 UTC)
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 9 1 * *'
+    - cron: '7 9 1 * *'
 
 jobs:
   what-im-working-on:
