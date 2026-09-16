@@ -19,6 +19,13 @@ export function saveState(filename, data) {
   writeFileSync(path, JSON.stringify(data, null, 2) + '\n');
 }
 
+// UTC calendar date as YYYY-MM-DD — used to dedupe posts if a scheduled run
+// fires more than once on the same day (GitHub Actions schedules can be
+// delayed by hours or retried manually).
+export function todayUTC(date = new Date()) {
+  return date.toISOString().slice(0, 10);
+}
+
 export function requireEnv(name) {
   const value = process.env[name];
   if (!value) throw new Error(`Missing required environment variable: ${name}`);

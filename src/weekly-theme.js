@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { WebClient } from '@slack/web-api';
-import { loadState, saveState, requireEnv, pickUnused, resolveChannelId } from './utils.js';
+import { loadState, saveState, requireEnv, pickUnused, resolveChannelId, todayUTC } from './utils.js';
 
 const STATE_FILE = 'theme-state.json';
 
@@ -57,12 +57,18 @@ const THEMES = [
 ];
 
 async function main() {
+  const state = loadState(STATE_FILE, { usedThemes: [], lastPostedDate: null });
+  const today = todayUTC();
+  if (state.lastPostedDate === today) {
+    console.log(`Already posted today (${today}) — skipping.`);
+    return;
+  }
+
   const token = requireEnv('SLACK_BOT_TOKEN');
   const channel = requireEnv('WEEKLY_THEME_CHANNEL');
   const slack = new WebClient(token);
   const channelId = await resolveChannelId(slack, channel);
 
-  const state = loadState(STATE_FILE, { usedThemes: [] });
   const { picked: theme, usedKeys } = pickUnused(THEMES, state.usedThemes, (t) => t.title);
 
   console.log(`Posting weekly theme: "${theme.title}"`);
@@ -71,7 +77,7 @@ async function main() {
     text: `${theme.emoji} *This week's theme: ${theme.title}*\nReply in the thread below. ${theme.prompt}`,
   });
 
-  saveState(STATE_FILE, { usedThemes: usedKeys });
+  saveState(STATE_FILE, { usedThemes: usedKeys, lastPostedDate: today });
   console.log('Done.');
 }
 

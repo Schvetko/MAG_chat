@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { WebClient } from '@slack/web-api';
-import { loadState, saveState, requireEnv, pickUnused, resolveChannelId } from './utils.js';
+import { loadState, saveState, requireEnv, pickUnused, resolveChannelId, todayUTC } from './utils.js';
 
 const STATE_FILE = 'fireside-state.json';
 
@@ -42,12 +42,18 @@ const QUESTIONS = [
 ];
 
 async function main() {
+  const state = loadState(STATE_FILE, { usedQuestions: [], lastPostedDate: null });
+  const today = todayUTC();
+  if (state.lastPostedDate === today) {
+    console.log(`Already posted today (${today}) — skipping.`);
+    return;
+  }
+
   const token = requireEnv('SLACK_BOT_TOKEN');
   const channel = requireEnv('FIRESIDE_CHANNEL');
   const slack = new WebClient(token);
   const channelId = await resolveChannelId(slack, channel);
 
-  const state = loadState(STATE_FILE, { usedQuestions: [] });
   const { picked: question, usedKeys } = pickUnused(QUESTIONS, state.usedQuestions);
 
   console.log(`Posting fireside question: "${question}"`);
@@ -56,7 +62,7 @@ async function main() {
     text: `🔥 *Fireside Question of the Week*\n\n${question}`,
   });
 
-  saveState(STATE_FILE, { usedQuestions: usedKeys });
+  saveState(STATE_FILE, { usedQuestions: usedKeys, lastPostedDate: today });
   console.log('Done.');
 }
 

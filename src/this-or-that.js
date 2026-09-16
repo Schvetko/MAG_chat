@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { WebClient } from '@slack/web-api';
-import { loadState, saveState, requireEnv, pickUnused, resolveChannelId } from './utils.js';
+import { loadState, saveState, requireEnv, pickUnused, resolveChannelId, todayUTC } from './utils.js';
 
 const STATE_FILE = 'poll-state.json';
 
@@ -44,12 +44,18 @@ const PAIRS = [
 ];
 
 async function main() {
+  const state = loadState(STATE_FILE, { usedPairs: [], lastPostedDate: null });
+  const today = todayUTC();
+  if (state.lastPostedDate === today) {
+    console.log(`Already posted today (${today}) — skipping.`);
+    return;
+  }
+
   const token = requireEnv('SLACK_BOT_TOKEN');
   const channel = requireEnv('THIS_OR_THAT_CHANNEL');
   const slack = new WebClient(token);
   const channelId = await resolveChannelId(slack, channel);
 
-  const state = loadState(STATE_FILE, { usedPairs: [] });
   const { picked: pair, usedKeys } = pickUnused(PAIRS, state.usedPairs, (p) => p.join(' vs '));
   const [optionA, optionB] = pair;
 
@@ -62,7 +68,7 @@ async function main() {
   await slack.reactions.add({ channel: channelId, timestamp: result.ts, name: 'a' });
   await slack.reactions.add({ channel: channelId, timestamp: result.ts, name: 'b' });
 
-  saveState(STATE_FILE, { usedPairs: usedKeys });
+  saveState(STATE_FILE, { usedPairs: usedKeys, lastPostedDate: today });
   console.log('Done.');
 }
 
