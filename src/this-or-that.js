@@ -60,13 +60,10 @@ async function main() {
   const [optionA, optionB] = pair;
 
   console.log(`Posting this-or-that poll: "${optionA}" vs "${optionB}"`);
-  const result = await slack.chat.postMessage({
+  await slack.chat.postMessage({
     channel: channelId,
     text: `🆚 *This or That?*\n\n🅰️  ${optionA}\n🅱️  ${optionB}\n\nReact below to vote!`,
   });
-
-  await slack.reactions.add({ channel: channelId, timestamp: result.ts, name: 'a' });
-  await slack.reactions.add({ channel: channelId, timestamp: result.ts, name: 'b' });
 
   saveState(STATE_FILE, { usedPairs: usedKeys, lastPostedDate: today });
   console.log('Done.');
